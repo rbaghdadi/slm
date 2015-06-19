@@ -1,0 +1,466 @@
+% This file was created with JabRef 2.6.
+% Encoding: UTF-8
+
+@STRING{pldi = "Symp.\ on Programming Language Design and Implementation"}
+@STRING{popl = "Symp.\ on Principles of Programming Languages"}
+
+@techreport{berkeleymotifs,
+  author = {Asanovic, Krste and Bodik, Ras and others},
+  title = "{The Parallel Computing Laboratory at U.C. Berkeley: A Research Agenda Based on the Berkeley View}",
+  institution = {UC Berkeley},
+  year = {2008},
+  month = {March},
+  number = {UCB/EECS-2008-23}
+}
+
+@ARTICLE{stoneopencl,
+  author = {Stone, John E. and Gohara, David and Shi, Guochun},
+  title = {{OpenCL:} A Parallel Programming Standard for Heterogeneous Computing
+	Systems},
+  journal = {{IEEE} Des. Test},
+  year = {2010},
+  volume = {12},
+  pages = {66--73},
+  number = {3},
+  abstract = {The {OpenCL} standard offers a common {API} for program execution
+	on systems composed of different types of computational devices such
+	as multicore {CPUs}, {GPUs}, or other accelerators.},
+  shorttitle = {{OpenCL}}
+}
+
+@misc{cudaref,
+  title={Nvidia {CUDA} Programming guide 4.0},
+  author={Nvidia},
+  year={2011}
+}
+
+@inproceedings{SPEAR,
+  title={An industrial perspective: A pragmatic high end signal processing design environment at {Thales}},
+  author={Lenormand, Eric and Edelin, Gilbert},
+  booktitle={SAMOS},
+  pages={52--57},
+  year={2003}
+}
+
+@inproceedings{danalis2010scalable,
+  title={The scalable heterogeneous computing ({SHOC}) benchmark suite},
+  author={Danalis, Anthony and Marin, Gabriel and McCurdy, Collin and Meredith, Jeremy S and Roth, Philip C and Spafford, Kyle and Tipparaju, Vinod and Vetter, Jeffrey S},
+  booktitle={GPGPU},
+  pages={63--74},
+  year={2010},
+}
+
+@article{lawson1979basic,
+  title={Basic linear algebra subprograms for Fortran usage},
+  author={Lawson, Chuck L and Hanson, Richard J. and Kincaid, David R and Krogh, Fred T.},
+  journal={ACM Trans. Math. Softw.},
+  volume={5},
+  number={3},
+  pages={308--323},
+  year={1979},
+  publisher={ACM}
+}
+
+@article{Verdoolaege2013PPCG,
+    author = {Verdoolaege, Sven and Juega, Juan Carlos and Cohen, Albert and
+		G\'{o}mez, Jos{\'e} Ignacio and Tenllado, Christian and
+		Catthoor, Francky},
+    title = {Polyhedral parallel code generation for {CUDA}},
+    journal = {ACM Trans. Archit. Code Optim.},
+    issue_date = {January 2013},
+    volume = {9},
+    number = {4},
+    month = jan,
+    year = {2013},
+    acmid = {2400713},
+}
+
+@InProceedings{Verdoolaege2012,
+  author =      { Sven Verdoolaege and Tobias Grosser },
+  title =      {Polyhedral Extraction Tool},
+  booktitle = {IMPACT},
+  year = {2012}
+}
+
+@inproceedings{verdoolaege_isl:_2010,
+  author = {Verdoolaege, Sven},
+  title = {isl: An Integer Set Library for the Polyhedral Model},
+  booktitle = {ICMS 2010},
+  year = {2010},
+  volume = {6327},
+  pages = {299--302},
+  shorttitle = {isl}
+}
+
+@INPROCEEDINGS{bondhugula_practical_2008,
+  author = {Bondhugula, Uday and Hartono, Albert and Ramanujam, J. and Sadayappan,
+	P.},
+  title = {A practical automatic polyhedral parallelizer and locality optimizer},
+  booktitle = {PLDI},
+  year = {2008},
+  pages = {101--113},
+  abstract = {We present the design and implementation of an automatic polyhedral
+	source-to-source transformation framework that can optimize regular
+	programs (sequences of possibly imperfectly nested loops) for parallelism
+	and locality simultaneously. Through this work, we show the practicality
+	of analytical model-driven automatic transformation in the polyhedral
+	model -- far beyond what is possible by current production compilers.
+	Unlike previous works, our approach is an end-to-end fully automatic
+	one driven by an integer linear optimization framework that takes
+	an explicit view of finding good ways of tiling for parallelism and
+	locality using affine transformations. The framework has been implemented
+	into a tool to automatically generate {OpenMP} parallel code from
+	C program sections. Experimental results from the tool show very
+	high speedups for local and parallel execution on multi-cores over
+	state-of-the-art compiler frameworks from the research community
+	as well as the best native production compilers. The system also
+	enables the easy use of powerful empirical/iterative optimization
+	for general arbitrarily nested loop sequences.},
+  keywords = {affine transformations, automatic parallelization, locality optimization,
+	loop transformations, polyhedral model, tiling}
+}
+
+@article{Baghdadi2013,
+  author    = {Riyadh Baghdadi and
+               Albert Cohen and
+               Sven Verdoolaege and
+               Konrad Trifunovic},
+  title     = {Improved loop tiling based on the removal of spurious false
+               dependences},
+  journal   = {TACO},
+  volume    = {9},
+  number    = {4},
+  year      = {2013},
+  pages     = {52},
+}
+
+@inproceedings{vobla2014,
+ author = {Beaugnon, Ulysse and Kravets, Alexey and van Haastregt, Sven and Baghdadi, Riyadh and Tweed, David and Absar, Javed and Lokhmotov, Anton},
+ title = {{VOBLA}: A Vehicle for Optimized Basic Linear Algebra},
+ booktitle = {LCTES},
+ year = {2014},
+ location = {Edinburgh, United Kingdom},
+ pages = {115--124},
+ numpages = {10},
+ acmid = {2597818},
+ keywords = {blas, domain-specific language, gpu, linear algebra, parallel, sparse matrix},
+}
+
+@misc{opencv_lib,
+    author = {{OpenCV Developers Team}},
+    title = {Open Source Computer Vision library},
+    year = {2002},
+    url = {http://opencv.org/}
+}
+
+@misc{clMath,
+    author = {{clMath Developers Team}},
+    title = {{OpenCL} Math Library},
+    url = {https://github.com/clMathLibraries},
+    year = {2013}
+}
+
+@manual{cublas,
+    author = {Nvidia},
+    howpublished = {http://docs.nvidia.com/cublas/index.html},
+    month = oct,
+    title = {{cuBLAS} Library User Guide},
+    year = {2012}
+}
+
+@inproceedings{lenormand2003industrial,
+  title={An industrial perspective: A pragmatic high end signal
+         processing design environment at {Thales}},
+  author={Lenormand, Eric and Edelin, Gilbert},
+  booktitle={In proceedings of the Workshop on Systems,
+             Architectures, Modeling and Simulation SAMOS},
+  pages={52--57},
+  year={2003}
+}
+
+@inproceedings{che2009rodinia,
+  title={Rodinia: A benchmark suite for heterogeneous computing},
+  author={Che, Shuai and Boyer, Michael and Meng, Jiayuan and Tarjan, David and Sheaffer, Jeremy W and Lee, Sang-Ha and Skadron, Kevin},
+  booktitle={IISWC},
+  pages={44--54},
+  year={2009},
+}
+
+@misc{ openmp08,
+    author = {{OpenMP Architecture Review Board}},
+    title = {{OpenMP} Application Program Interface, v3.0},
+    month = may,
+    year = {2008}
+}
+
+@misc{openacc11,
+    author = {{CAPS Enterprise, Cray Inc., Nvidia, and the Portland Group}},
+    title = {The {OpenACC} Application Programming Interface, v1.0},
+    month = nov,
+    year = {2011}
+}
+
+
+@article{loveman1993high,
+  title={High performance {Fortran}},
+  author={Loveman, David B.},
+  journal={Parallel \& Distributed Technology: Systems \& Applications},
+  volume={1},
+  number={1},
+  pages={25--42},
+  year={1993},
+}
+
+@article{halide_12,
+ author = {Ragan-Kelley, Jonathan and Adams, Andrew and Paris, Sylvain and Levoy, Marc and Amarasinghe, Saman and Durand, Fr{\'e}do},
+ title = {Decoupling Algorithms from Schedules for Easy Optimization of Image Processing Pipelines},
+ journal = {ACM Trans. Graph.},
+ issue_date = {July 2012},
+ volume = {31},
+ number = {4},
+ month = jul,
+ year = {2012},
+ issn = {0730-0301},
+ pages = {32:1--32:12},
+ articleno = {32},
+ numpages = {12},
+ acmid = {2185528},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {compilers, image processing, performance},
+} 
+
+@inproceedings{diedrot_pldi12,
+ author = {Chiw, Charisee and Kindlmann, Gordon and Reppy, John and Samuels, Lamont and Seltzer, Nick},
+ title = {Diderot: A Parallel {DSL} for Image Analysis and Visualization},
+ booktitle = {PLDI},
+ pages = {111--120},
+ acmid = {2254079},
+ year = 2012,
+ keywords = {domain specific languages, image analysis, parallelism, scientific visualization},
+} 
+
+@inproceedings{oolala_2000,
+ author = {Luj\'{a}n, Mikel and Freeman, T. L. and Gurd, John R.},
+ title = {OoLALA: An Object Oriented Analysis and Design of Numerical Linear Algebra},
+ booktitle = {OOPSLA},
+ year = {2000},
+ pages = {229--252},
+ numpages = {24},
+ acmid = {353187},
+ keywords = {Java, numerical linear algebra, object orientation},
+} 
+
+@INPROCEEDINGS{chafi_domain-specific_2011,
+  author = {Chafi, Hassan and Sujeeth, Arvind K. and Brown, Kevin J. and Lee,
+	{HyoukJoong} and Atreya, Anand R. and Olukotun, Kunle},
+  title = {A domain-specific approach to heterogeneous parallelism},
+  booktitle = {PPoPP},
+  year = {2011},
+  pages = {35--46},
+  keywords = {domain-specific languages, dynamic optimizations, parallel programming,
+	runtimes},
+  owner = {b},
+  timestamp = {2012.09.29},
+}
+
+@inproceedings{lms_staging_10,
+ author = {Rompf, Tiark and Odersky, Martin},
+ title = {Lightweight Modular Staging: A Pragmatic Approach to Runtime Code Generation and Compiled DSLs},
+ booktitle = {Proceedings of the Ninth International Conference on Generative Programming and Component Engineering},
+ series = {GPCE '10},
+ year = {2010},
+ isbn = {978-1-4503-0154-1},
+ location = {Eindhoven, The Netherlands},
+ pages = {127--136},
+ numpages = {10},
+ doi = {10.1145/1868294.1868314},
+ acmid = {1868314},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {code generation, domain-specific languages, language virtualization, multi-stage programming},
+} 
+
+@inproceedings{tobias_hexagonal_cgo13,
+ author = {Grosser, Tobias and Cohen, Albert and Holewinski, Justin and Sadayappan, P. and Verdoolaege, Sven},
+ title = {Hybrid Hexagonal/Classical Tiling for GPUs},
+ booktitle = {Proceedings of Annual IEEE/ACM International Symposium on Code Generation and Optimization},
+ series = {CGO '14},
+ year = {2014},
+ location = {Orlando, FL, USA},
+ pages = {66:66--66:75},
+ articleno = {66},
+ numpages = {10},
+ acmid = {2544160},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {CUDA, GPGPU, Polyhedral compilation, code generation, loop transformations, stencil, time tiling},
+} 
+
+@article{Whaley:Parallel:2001,
+    author = {R. Clint Whaley and Antoine Petitet and Jack J. Dongarra},
+    title = {Automated Empirical Optimization of Software and the {ATLAS} Project},
+    journal = {Parallel Computing},
+    year = {2000},
+    volume = {27},
+    pages = {2001}
+}
+
+@inproceedings{Agakov:CGO:2006,
+ author = {Agakov, F. and Bonilla, E. and Cavazos, J. and Franke, B. and Fursin, G. and O'Boyle, M. F. P. and Thomson, J. and Toussaint, M. and Williams, C. K. I.},
+ title = {Using Machine Learning to Focus Iterative Optimization},
+ booktitle = {Proceedings of CGO},
+ year = {2006}
+} 
+
+@inproceedings{Yotov:PLDI:2003,
+ author = {Yotov, Kamen and Li, Xiaoming and Ren, Gang and Cibulskis, Michael and DeJong, Gerald and Garzaran, Maria and Padua, David and Pingali, Keshav and Stodghill, Paul and Wu, Peng},
+ title = {A Comparison of Empirical and Model-driven Optimization},
+ booktitle = {Proceedings of PLDI},
+ year = {2003}
+} 
+
+@techreport{c99,
+    author = {{ISO}},
+    institution = {ISO/IEC},
+    keywords = {c-language, foundation},
+    number = {WG14 N1124},
+    title = {{The ANSI C standard (C99)}},
+    year = {1999}
+}
+
+@techreport{c11,
+    author = {{ISO}},
+    institution = {ISO/IEC},
+    keywords = {c-language, foundation},
+    number = {WG14 N1570},
+    title = {{The ANSI C standard (C11)}},
+    url = {http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf},
+    year = {2011}
+}
+
+@techreport{cray,
+  title={Cray Standard C/C++ Reference Manual},
+  author={{Cray Inc.}},
+  number = {{S–2179–81}},
+  year = {2012}
+}
+
+@techreport{intelopt,
+  title={Intel 64 and IA-32 Architectures Optimization Reference Manual},
+  author={{Intel}},
+  number = {{248966-030}},
+  year = {2014}
+}
+
+@book{gccguide,
+  title={The definitive guide to GCC},
+  author={Von Hagen, William},
+  volume={2},
+  year={2006},
+  publisher={Springer}
+}
+
+@techreport{pencil,
+  TITLE = {{PENCIL Language Specification}},
+  AUTHOR = {Baghdadi, Riyadh and Cohen, Albert and Grosser, Tobias and Verdoolaege, Sven and Lokhmotov, Anton and Absar, Javed and Van Haastregt, Sven and Kravets, Alexey and Donaldson, Alastair},
+  URL = {https://hal.inria.fr/hal-01154812},
+  TYPE = {Research Report},
+  NUMBER = {RR-8706},
+  PAGES = {37},
+  INSTITUTION = {{INRIA}},
+  YEAR = {2015},
+  MONTH = May,
+  KEYWORDS = { PENCIL ;  DSL ;  Accelerator ;  Domain Specific Language ; Intermediate Language ;  OpenCL},
+  PDF = {https://hal.inria.fr/hal-01154812/file/RR-8706.pdf},
+  HAL_ID = {hal-01154812},
+  HAL_VERSION = {v3},
+}
+
+@techreport{berkely_motifs,
+    Author = {Asanovic, Krste and Bodik, Ras and Catanzaro, Bryan Christopher and Gebis, Joseph James and Husbands, Parry and Keutzer, Kurt and Patterson, David A. and Plishker, William Lester and Shalf, John and Williams, Samuel Webb and Yelick, Katherine A.},
+    Title = {The Landscape of Parallel Computing Research: A View from {Berkeley}},
+    Institution = {University of California, Berkeley},
+    Year = {2006},
+    Month = {Dec},
+    Number = {UCB/EECS-2006-183}
+}
+
+@techreport{Verdoolaege2015pencil,
+	author = "Sven Verdoolaege",
+	title = "PENCIL support in pet and {PPCG}",
+	institution = "INRIA Paris-Rocquencourt",
+	number = "RT-457",
+	year = 2015,
+	month = mar,
+}
+
+@article{DBLP:journals/toms/AlnaesLORW14,
+  author    = {Martin Sandve Aln{\ae}s and
+               Anders Logg and
+               Kristian B. {\O}lgaard and
+               Marie E. Rognes and
+               Garth N. Wells},
+  title     = {Unified form language: {A} domain-specific language for weak formulations
+               of partial differential equations},
+  journal   = {{ACM} Trans. Math. Softw.},
+  volume    = {40},
+  number    = {2},
+  pages     = {9},
+  year      = {2014},
+  timestamp = {Tue, 18 Mar 2014 13:37:33 +0100},
+  biburl    = {http://dblp.uni-trier.de/rec/bib/journals/toms/AlnaesLORW14},
+  bibsource = {dblp computer science bibliography, http://dblp.org}
+}
+
+@inproceedings{DBLP:conf/pldi/Ragan-KelleyBAPDA13,
+  author    = {Jonathan Ragan{-}Kelley and
+               Connelly Barnes and
+               Andrew Adams and
+               Sylvain Paris and
+               Fr{\'{e}}do Durand and
+               Saman P. Amarasinghe},
+  title     = {Halide: a language and compiler for optimizing parallelism, locality,
+               and recomputation in image processing pipelines},
+  booktitle = {PLDI},
+  pages     = {519--530},
+  year      = {2013},
+  timestamp = {Sun, 09 Jun 2013 12:32:52 +0200},
+  biburl    = {http://dblp.uni-trier.de/rec/bib/conf/pldi/Ragan-KelleyBAPDA13},
+  bibsource = {dblp computer science bibliography, http://dblp.org}
+}
+
+@article{wirth1996EBNF,
+  title={{Extended Backus-Naur Form Syntaxt Specification}},
+  author={Wirth, Niklaus},
+  journal={ISO/IEC 14977},
+  year={1996}
+}
+
+@misc{opencl-1.2,
+  author = {{Khronos Group}},
+  year = 2011,
+  title = "OpenCL 1.2 Specification",
+  howpublished = "\url{http://www.khronos.org/registry/cl/sdk/1.2/docs/man/xhtml/}"
+}
+
+@InProceedings{Bas04,
+  author =        {Bastoul, C\'{e}dric},
+  title =         {Code Generation in the Polyhedral Model Is Easier Than You Think},
+  booktitle =     {{PACT'13 IEEE} International Conference on Parallel Architecture and Compilation Techniques},
+  keywords =      {Iterative Polyhedral Transformations},
+  year =          2004,
+  pages =         {7--16},
+  month =         sep,
+  address =       {Juan-les-Pins, France},
+  note = 	  {Classement CORE~:~A, nombre de papiers accept\'es~:~23, soumis~:~122, student award},
+  URL =           {http://hal.ccsd.cnrs.fr/ccsd-00017260},
+  pdf =           {http://hal.ccsd.cnrs.fr/docs/00/05/52/29/PDF/bastoul2004code.pdf}
+}
+
+
+@techreport{cpp11,
+  title={{ISO/IEC} 14882:2011 -- Information technology -- Programming languages -- C++},
+  author={{ISO}},
+  year={2011}
+}

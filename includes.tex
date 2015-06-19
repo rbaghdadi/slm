@@ -1,0 +1,198 @@
+%----Language
+%\usepackage[francais,english]{babel}
+\usepackage[english]{babel}
+
+%To be able to insert comments, use verbatim.
+\usepackage{verbatim}
+\usepackage{rotating}
+\usepackage{algpseudocode}
+\usepackage{booktabs}
+
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{xspace}
+\usepackage[colorlinks=true,allcolors=blue,breaklinks,draft=false]{hyperref}
+
+\usepackage{caption}
+
+%to get LASY symbols
+\usepackage{graphicx}
+\usepackage{rotating}
+%\usepackage{epsfig}
+%\usepackage[T1]{fontenc}
+%\usepackage{lmodern}
+\usepackage{euscript}
+\usepackage{latexsym}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{url}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+%\usepackage{subfigure}
+\usepackage{mathpartir}
+\usepackage{enumitem}      % adjust spacing in enums
+
+% normalem garantit que \em reste l'italique
+\usepackage[normalem]{ulem}
+
+
+%to support C programs, cprog must be installed: http://www.ctan.org/pkg/cprog
+\usepackage{cprog}
+\usepackage{listings}
+
+\newcommand*\mycirc[1]{%
+      \begin{tikzpicture}[baseline=(C.base)]
+        \node[draw,circle,inner sep=1pt](C) {#1};
+      \end{tikzpicture}}
+
+
+      \newcommand{\mc}[3]{\multicolumn{#1}{#2}{#3}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CARP related includes %%%%%%%%%%%%%%%%%%%%%%%%%%%
+% This gives syntax highlighting in the python environment
+\renewcommand{\lstlistlistingname}{Code Listings}
+\renewcommand{\lstlistingname}{Code Listing}
+
+\definecolor{gray}{gray}{0.5}
+\definecolor{key}{rgb}{0,0.5,0}
+
+
+
+\def\OPTL{\textrm{$[$}}
+\def\OPTR{\textrm{$]$}}
+
+\definecolor{lightbackground}{rgb}{.98,.98,.97}
+\definecolor{darkgray}{rgb}{.3,.3,.3}
+\definecolor{darkred}{rgb}{.6,0,0}
+\definecolor{darkgreen}{rgb}{0,.6,0}
+\definecolor{darkblue}{rgb}{0,0,.6}
+\usepackage{listings}
+
+\lstdefinelanguage{pencil}{%
+  %% Definition du langage
+  %% List of keywords
+  keywords={[1]},%for,do,while,if,else,break,continue,return
+  keywords={[2]struct,union,enum,typedef,volatile,%
+    signed,unsigned,sizeof,typeof,inline,noinline,%
+    void,char,short,long,int,float,double,boolean,size_t},
+  keywords={[3]pragma,pencil,independent,ivdep,reduction,access, private},
+  keywords={[4],__attribute__,%
+    pencil_access,__pencil_kill,KILL,__pencil_assume,ASSUME,__pencil_assert,%
+    __pencil_maybe,MAYBE,__pencil_use,USE,__pencil_def,DEF,MAY_DEF,%
+    PENCIL,__pencil_access,ACCESS,CONST,pencil_heap,const,restrict,static, pencil_attributes,
+__builtin_assume, __assume, __builtin_unreachable},
+  %emph={main,producer,consumer,master,selector,compute,hscan,sync_av},
+  %% List of abbreviations
+  % literate={<=}{{$\leq$}}1 {>=}{{$\geq$}}1 {!=}{{$\neq$}}1 {*}{{$\times$}}1,
+  literate={[OPT[}{{\OPTL}}1 {]OPT]}{{\OPTR}}1,
+  %{\#}{{\textbf{\color{darkgreen}\#}}}1,
+  %% List of strings
+  string=[b]",
+  %% List of comment strings
+  comment=[l]//,
+  morecomment=[s]{/*}{*/},
+  %% Special character for LaTeX
+  mathescape=true,
+  %% Definition du style
+  flexiblecolumns=true,
+  tabsize=2,
+  %% numerotage des lignes
+  %firstnumber=1,
+  %stepnumber=1,
+  %numbers=left,
+  % numbersep=-6mm,
+  %% titre
+  captionpos=b,
+  % abovecaptionskip=3mm,
+  % belowcaptionskip=3mm,
+  %% La boite englobante
+  frame=single,
+  framerule=0pt,
+  aboveskip=1pt,
+  belowskip=1pt,
+  framesep=1pt,
+  %% Les styles
+  basicstyle=\scriptsize\ttfamily,
+  keywordstyle={[1]\color{darkred}},
+  keywordstyle={[2]\color{blue}},
+  keywordstyle={[3]\color{darkgreen}\bfseries},
+  keywordstyle={[4]\color{darkblue}\bfseries},
+  %keywordstyle=\fontseries{bx}\fontfamily{cmss}\fontshape{n}\selectfont,
+  % numberstyle=\footnotesize,
+  % basicstyle=,
+  % keywordstyle=\sbf,
+  % numberstyle=,
+  emphstyle=\slshape,
+  identifierstyle=\color{black},
+  commentstyle=\color{darkgray},
+  stringstyle=\color{green}
+}
+
+%\lstset{language=pencil,backgroundcolor=\color{lightbackground}}
+\lstset{language=pencil,backgroundcolor=\color{lightbackground},%
+  belowskip=.5em, aboveskip=.5em}
+
+\definecolor{voblacomment}{rgb}{0,0.4,0}
+\lstdefinelanguage{vobla}{morekeywords={%
+    in,out,as,is,im,sum,let,range,for, forall,while,if,else,len,this,base,%
+    export,function,interface,parameter,implements,storage,layout,view,%
+    Reversed,Transpose,Normal,Diag,AntiDiag,Conjugated,Row,Column,Complex,%
+    Re,Im,Transpose,Conjugate,Diagonal,AntiDiagonal,Sparse,%
+  Double,Real,Float,Index,Value,import},%
+  comment=[l]//,
+  %% Definition du style
+  flexiblecolumns=true,
+  tabsize=2,
+  %% titre
+  captionpos=b,
+  %% La boite englobante
+  frame=single,
+  framerule=0pt,
+  aboveskip=10pt,
+  belowskip=10pt,
+  framesep=1pt,
+  %% Les styles
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue},
+  %keywordstyle=\fontseries{bx}\fontfamily{cmss}\fontshape{n}\selectfont,
+  % numberstyle=\footnotesize,
+  % basicstyle=,
+  % keywordstyle=\sbf,
+  % numberstyle=,
+  commentstyle=\color{voblacomment},
+}
+
+% a few macros to avoid typo
+\newcommand\carp{\textsc{Carp}}
+
+
+\let\ctextfont=\ttfamily
+\lstset{basicstyle=\small\ttfamily}
+
+\newcommand{\LB}{\textrm{\L}}
+
+\newcommand\isl{\texttt{isl}\xspace}
+\newcommand\pet{\texttt{pet}\xspace}
+\newcommand\PPCG{\texttt{PPCG}\xspace}
+\newcommand\pencil{\textsc{Pencil}\xspace}
+
+\newcommand{\lstnumberautorefname}{Line}
+
+% Operational semantics macros
+\newcommand{\lplaineval}{\Downarrow}
+\newcommand{\leval}[2]{{#1}\lplaineval{#2}}
+\newcommand{\lfor}[5]{{#1} \  \texttt{for} ( #2; \, #3; \, #4 ) \, #5}
+\newcommand{\lufor}[5]{{#1} \  \underline{\mathtt{for}} ( #3; \, #4 ) \, #5}
+\newcommand{\lassume}[1]{\texttt{\_\_pencil\_assume} ( #1 )}
+\newcommand{\lseq}[2]{#1 \ #2}
+\newcommand{\ltrue}{\mathsf{true}}
+\newcommand{\lfalse}{\mathsf{false}}
+\newcommand{\lstate}{\sigma}
+\newcommand{\lreadset}{\mathcal{R}}
+\newcommand{\lwriteset}{\mathcal{W}}
+\newcommand{\lintuple}[2]{\langle #1, #2 \rangle}
+\newcommand{\louttuple}[3]{\langle #1, #2, #3 \rangle}
+\newcommand{\leouttuple}[4]{\langle #1, #2, #3, #4 \rangle}
+\newcommand{\lclearscope}[2]{\kappa(#1)}
+\newcommand{\lcheckrwsetsplain}{\mathrm{check\_rw}}
+\newcommand{\lcheckrwsets}[5]{\mathrm{check\_rw}_{#1}(#2, #3, #4, #5)}

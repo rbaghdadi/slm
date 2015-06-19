@@ -1,0 +1,347 @@
+% llncs : version 2.4 for LaTeX2e as of 16. April 2010
+\documentclass{llncs}
+%
+
+\usepackage{amsmath}
+\usepackage{nomencl}
+\input{includes}
+
+%
+\begin{document}
+%
+\frontmatter          % for the preliminaries
+\pagestyle{headings}  % switches on printing of running heads
+\mainmatter           % start of the contributions
+%
+\title{}
+
+%
+\author{}
+
+\institute{INRIA and \'Ecole Normale Sup\'erieure \\
+\email{\textit{first}.\textit{last}@inria.fr}}
+
+\maketitle{}
+
+\begin{abstract}
+  Low-level GPU programming with CUDA and OpenCL is difficult, error
+  prone, and not performance-portable. Automatic parallelization
+  and code optimization techniques have been proposed
+  to hide this complexity and regain some performance portability.
+  Studying a computer vision application, we propose
+  \pencil{}, a platform-neutral compute intermediate language that can
+  be used as a high level language to target accelerators.
+  We demonstrate the \pencil{} constructs on examples from different
+  fields, including code patterns considered unfriendly to polyhedral
+  compilers, such as irregular, data-dependent control flow and array
+  accesses.
+  We evaluate the proposed language and tool chain on an implementation
+  of KinectFusion, a large computer vision and \textit{simultaneous
+  localization and mapping} (SLAM) application.
+  We obtain acceptable performance compared to the relatively low
+  programming effort and compared to the high portability benefit.
+\end{abstract}
+
+\section{Introduction}
+
+Special-purpose \emph{accelerators} such as GPUs can significantly
+outperform general-purpose processors in terms of raw performance and
+energy efficiency.  Software for such accelerators is currently
+written using low-level APIs and target-specific languages, such as
+OpenCL and CUDA, which increases the cost of its development and
+maintenance.
+
+Computer vision is a typical domain that relies extensively on the
+use of accelerators and where writing low level code to target
+different architectures is becoming more and more difficult, error
+prone and featuring non-portable optimizations.
+On the other hand, writing high level code and lowering that code
+through an optimizing compiler naturally arose as a viable alternative.
+
+\pencil{}~\cite{pencil}, a platform-neutral compute intermediate
+language is an example of a language that can be used to target
+accelerators.
+Although the target platforms are highly parallel, \pencil{} has
+sequential semantics.  In addition, it is equiped with language
+constructs and specific properties particularly well
+suited for static analysis of array computations.
+To compile \pencil{} programs to OpenCL, the polyhedral framework is used,
+a program representation and a set of analyses, transformations and code
+generation algorithms that enable a compiler to reason about advanced
+loop nest transformations addressing most of the parallelism and
+locality-enhancing challenges.
+
+To understand the tradeoffs behind the design of such an a
+language, we study 
+
+
+In this paper, we evaluate \pencil{} on a benchmark from the computer
+vision and the \textit{simultaneous localization and mapping} (SLAM)
+domains.
+This benchmark is particularly interesting as it represents a realistic
+application that has code patterns that are challenging for a classical
+polyhedral compiler, such as irregular, data-dependent control flow
+and array accesses.
+We compare the performance of the automatically generated OpenCL codes
+with the reference OpenCL manual implementation of SLAMBench.
+
+Although our study focuses on examples from the domain of computer
+vision, the proposed language and the \pencil{} compilation flow
+is generally applicable to a wide set of array-based computational
+problems.
+Separate evaluations on the fields of image processing, linear algebra,
+signal processing and on the SHOC and Rodinia benchmarks are being
+conducted separately.
+
+
+Overview of PENCIL
+
+
+
+\section{Overview of the SLAMBench Computer Vision Benchmark}
+
+To explore the applicability of \pencil to a complex,
+real-world application, a \pencil port for the SLAMBench
+Benchmark was implemented~\cite{SLAMBench2015}.
+SLAMBench provides C++, OpenMP, OpenCL, and CUDA implementations
+of KinectFusion~\cite{KinectFusion2011}, a dense computer vision
+and \textit{simultaneous localization and mapping} (SLAM)
+application
+SLAMBench was developed as part of the PAMELA project, that
+intends to take a holistic approach to the development
+of many-core architectures, compilers, and runtime systems,
+while focusing on the computer vision application
+domain~\cite{PAMELAWeb2012}.
+
+SLAMBench is composed of 12 key kernels (listed in
+Table~\ref{SLAMBench_Features}). 
+%: \textit{mm2meters, bilateralFilter, integrate, depth2vertex,
+% vertex2normal, halfSampleRobustImage, renderDepth, renderTrack,
+% renderVolume, raycast, track} and \textit{reduce}. 
+Ten of the twelve can be classified as being irregular:
+All kernels except \textit{depth2vertex}, \textit{vertex2Normal},
+and \textit{mm2meters} exhibit non static-affine conditions and/or
+loop-bounds, while \textit{raycast}, \textit{renderVolume},
+\textit{vertex2Normal}, \textit{integrate}, and
+\textit{bilateralFilter} also exhibit non static-affine array reads.
+
+
+Why is it interesting.
+
+
+Show code snapshots.
+
+
+\section{Polyhedral Compilation of PENCIL Code}
+
+
+
+
+
+
+
+\section{Evaluation}
+\label{slambench}
+
+The benchmark reports results for 5 distinct phases, each of which
+is composed of one or more of the above kernels.
+For each phase, we compare performance against the pre-existing OpenCL
+implementation that has been hand-optimized for the ARM Arndale board
+with the Mali-T604 GPU. The phases and their constituent kernels are
+as follows:
+
+\begin{itemize}
+\item \textbf{\textit{preprocessing}:} \textit{mm2meters, bilateralFilter};
+\item \textbf{\textit{integration}:} \textit{integrate};
+\item \textbf{\textit{raycasting}:} \textit{raycast};
+\item \textbf{\textit{rendering}:} \textit{renderDepth, renderTrack, renderVolume};
+\item \textbf{\textit{tracking}:} \textit{depth2vertex, vertex2normal,
+      halfSampleRobustImage, track, reduce}.
+\end{itemize}
+
+
+Methodology
+
+
+Platforms
+
+
+Table~\ref{SLAMBench_Speedups} presents the results for our optimized
+\pencil implementation, compiled using the best \PPCG tile and
+work-group size parameters that could be identified with reasonable
+effort.
+We present both the wall-clock times as well as only the total kernel
+execution times in seconds for both the hand-optimized OpenCL and
+\pencil implementations.
+The \pencil implementation's wall-clock performance is only
+$0.31\times$ that of the hand-optimized OpenCL.
+
+The key reason for this is the current lack of support for whole-program
+optimization, particulary with respect to memory allocation across host
+and device memory.
+The hand-optimized OpenCL judiciously allocates memory between host and
+device memory, minimizing unnecessary copies between kernel invocations.
+Unfortunately, OpenCL generated from \pencil is compiled as a separate
+library that is invoked from within the C++ SLAMBench code.
+Therefore, \PPCG is only able to optimize and transform memory access
+patterns within each kernel, independently of the other kernels. 
+Thus each runtime kernel invocation requires copying of the relevant
+data-structures from host to device memory, and then back. 
+As each of the kernels is called either 882 or 2646 times (for the
+default dataset), the cumulative effect of these repeated copies
+significantly reduces wall-clock performance relative to hand-tuned OpenCL.
+Nevertheless, despite the $3\times$ overall slow-down, \pencil SLAMBench
+wall-clock performance is still roughly $2.4\times$ better than the
+sequential C++ implementation.
+
+\begin{table}[htbp]
+\begin{center}
+\scalebox{0.85}{
+\begin{tabular}{|l|r|r|r|r|r|r|}
+\hline
+& \multicolumn{2}{c|}{\textbf{OpenCL}} & \multicolumn{2}{c|}{\textbf{PENCIL}} & \multicolumn{2}{c|}{\textbf{SpeedUp}} \\ \hline
+\textbf{Phases} & \textbf{clock} & \textbf{kernel} & \textbf{clock} & \textbf{kernel} & \textbf{clock} & \textbf{kernel} \\ \hline
+preprocessing & 16.2 & 10.5 & 23.8 & 11.4 & $0.68\times$ & $0.92\times$ \\ %\hline
+integration & 69.3 & 67.7 & 403.7 & 93.7 & $0.17\times$ & $0.72\times$ \\ %\hline
+raycasting & 65.8 & 64.8 & 97.3 & 56.7 & $0.68\times$ & $1.14\times$ \\ %\hline
+rendering & 23.3 & 17.9 & 44.8 & 15.7 & $0.52\times$ & $1.14\times$ \\ %\hline
+tracking & 98.9 & 50.2 & 355.1 & 81.5 & $0.28\times$ & $0.62\times$ \\ %\hline
+\textbf{Total} & \textbf{279.2} & \textbf{200.5} & \textbf{906.1} & \textbf{259.1} & \textbf{0.31$\times$} & \textbf{0.77$\times$} \\ \hline
+\end{tabular} }
+\end{center}
+\vskip-0.1cm
+\caption{Performance comparison of the PENCIL implementation of
+         SLAMBench vs. hand-optimized OpenCL, on ARM Mali-T604.}
+\label{SLAMBench_Speedups}
+\vskip-0.1cm
+\end{table}
+
+Furthermore, though the \pencil implementation exhibits only a third
+of the wall-clock performance of hand-optimized OpenCL, the kernel-only
+execution times are only 23\% slower overall. The \textit{raycasting} and
+\textit{rendering} phases even exhibit a 14\% kernel performance improvement
+over hand-optimized OpenCL, while the \textit{preprocessing} phase is only
+about 8\% slower.
+The reason that kernel performance is sometimes better than hand-optimized
+OpenCL is that the simplicity and higher-level of abstraction provided by
+\pencil make it much easier to more thoroughly explore the optimization
+search-space, simply by changing the \PPCG compiler parameters.
+This is in contrast to the more involved and careful changes that must
+be manually made to OpenCL host and kernel code for each set of tile
+and work-group size parameters, or for any of the loop optimizations
+and transforms that must be manually implemented without the assistance
+of a polyhedral compiler.
+
+Note that unlike the other benchmarks discussed above, the SLAMBench
+\pencil compilation flow did not make use of auto-tuning, so the current
+best \PPCG parameters were discovered through manual trial-and-error.
+With further work, we hope to make use of auto-tuning to further improve
+upon the reported kernel performance figures. To improve to wall-clock
+performance and improve memory allocation across the system, further
+enhancements to both the \pencil language and the \PPCG compiler must
+be considered.
+
+Table~\ref{SLAMBench_Features} lists the \pencil features that affect
+the implementation and/or performance of each of the ported kernels.
+All of the kernels that have non static-affine code require \PPCG's
+support for irregular code compilation.
+In addition, most such kernels also make use of summary
+functions -- innermost loop code was extracted into library functions
+that were called from within the \pencil code.
+This was needed to incorporate non-polyhedral code optimizations like
+vector data-types, that were necessary to improve performance relative
+to the hand-optmized OpenCL.
+
+%track: NSCC
+%raycast: NSCC, NSRD
+%renderVolume: NSCC, NSRD
+%renderTrack: NSCC
+%renderDepth: NSCC
+%halfSampleRobustImage: NSCC
+%vertex2Normal: NSRD
+%depth2Vertex:
+%mm2meters:
+%integrateKernel: NSCC, NSRD
+%bilateralFilter: NSCC, NSRD
+%reduce: NSCC
+
+\begin{table}[htbp]
+\centering
+\begin{center}
+\scalebox{0.75} {
+\begin{tabular}{|l|l|l|l|}
+\hline                       
+Kernel & no support for            & no parameter & no  \\
+       & \textit{irregular} code   & tuning &  \textit{assumes} \\
+%       & or summary functions      & &  \\       
+\hline
+\textit{mm2meters}             &     	-	           & $15\% \downarrow$   &  $28\% \downarrow$ \\
+\textit{bilateralFilter}       & 	no code	generation &     -               &  $14\% \downarrow$ \\	
+\textit{integrate}             & 	no code	generation &	 $51\% \downarrow$   &   -                \\                       
+\textit{depth2vertex}          &     	-	           &     -                &  $79\% \downarrow$ \\
+\textit{vertex2normal}         & 	no code generation & $58\% \downarrow$    &   -             \\
+\textit{halfSampleRobustImage} & 	no code	generation & $14\% \downarrow$   &  $6\% \downarrow$ \\
+\textit{renderDepth}           & 	no code	generation &     -               &  $23\% \downarrow$ \\
+\textit{renderTrack}           & 	no code	generation &     -               &  $5\% \downarrow$ \\
+\textit{renderVolume}          & 	no code	generation & $52\% \downarrow$   &   -	 \\
+\textit{raycast}               & 	no code	generation & $51\% \downarrow$   &   -             \\
+\textit{track}                 & 	no code	generation & $27\% \downarrow$   &  $4\% \downarrow$ \\
+\textit{reduce}                & 	no code	generation & $24\% \downarrow$   & 	-	 \\
+\hline
+\end{tabular} }
+\end{center}
+\vskip-0.2cm
+\caption{\label{SLAMBench_Features}Effect of not Using \pencil Features on the Speedups}
+\vskip-0.5cm
+\end{table}  
+
+The \pencil based SLAMBench implementation performance was also
+highly sensitive to \PPCG's compiler flags, in particular the
+work-group and tile size parameters for each kernel.
+The third column of Table~\ref{SLAMBench_Features} presents the
+performance impact of compiling each kernel with default
+parameters only, relative to execution with the most optimized
+set of parameters.
+Many of the kernels exhibit performance degradation of $15-60\%$.
+Also removing the \lstinline!__pencil_assume! statements further
+degrades the performance of some of the kernels by $4-80\%$.
+
+The results in this section demonstrate the potential advantages
+of the \pencil language and polyhedral compilation for rapidly
+implementing and tuning code for execution on GPUs or other
+accelerators, even for a complex, real-world application like
+KinectFusion.
+We also identify a key remaining issue that need to be addressed
+-- optimizing memory allocation and communication across host
+and accelerator -- for this to become the preferred approach to
+rapid and efficient accelerator programming.
+
+% This is what we do here: (a) a short description of SLAMBench:
+% what it is, why it is relevant etc. (PAMELA justification here),
+% followed by (b) Characteristics of SLAMBench: it contains irregular
+% code, is a full application (i.e. pencil code must be incorporated
+% with irregular, non-compute CPP benchmark code), and (c) the
+% constituents of SLAMBench - the various kernels, divided into phases.
+% some insight into the kernel code itself (esp the key ones: integrate,
+% track, reduce).
+
+% For SLAMbench, several features were essential for either getting
+% it to work at all or having it perform correctly.
+% Summary functions used extensively.
+% These were sometimes necessary to overcome some fragility in
+% our toolchain, but also proved useful in enabling target-specific,
+% non-polyhedral, OpenCL code optimizations like vectorization.
+% Also used: assumes. independent directive was not needed.
+% kills not used, but could've helped.
+
+
+\section{Related Work}
+
+
+\section{Conclusion}
+
+
+\bibliographystyle{abbrv}
+\bibliography{bibliographies/pencilbib,bibliographies/SLAMBenchCitations}
+
+\end{document}
