@@ -64,9 +64,9 @@ prone and featuring non-portable optimizations.
 On the other hand, writing high level code and lowering that code
 through an optimizing compiler naturally arose as a viable alternative.
 
-\pencil{}~\cite{pencil}, a platform-neutral compute intermediate
-language is an example of a language that can be used to target
-accelerators.
+\pencil{}~\cite{pencil,pencil_pact,pencil_wolfhpc}, a platform-neutral
+compute intermediate language is an example of a language that can be
+used to target accelerators.
 Although the target platforms are highly parallel, \pencil{} has
 sequential semantics.  In addition, it is equiped with language
 constructs and specific properties particularly well
@@ -78,8 +78,7 @@ loop nest transformations addressing most of the parallelism and
 locality-enhancing challenges.
 
 To understand the tradeoffs behind the design of such an a
-language, we study 
-
+language, we study ....
 
 In this paper, we evaluate \pencil{} on a benchmark from the computer
 vision and the \textit{simultaneous localization and mapping} (SLAM)
@@ -96,13 +95,8 @@ vision, the proposed language and the \pencil{} compilation flow
 is generally applicable to a wide set of array-based computational
 problems.
 Separate evaluations on the fields of image processing, linear algebra,
-signal processing and on the SHOC and Rodinia benchmarks are being
-conducted separately.
-
-
-Overview of PENCIL
-
-
+signal processing and on the SHOC and Rodinia benchmarks have been
+published in~\cite{pencil_pact}.
 
 \section{Overview of the SLAMBench Computer Vision Benchmark}
 
@@ -121,9 +115,16 @@ domain~\cite{PAMELAWeb2012}.
 
 SLAMBench is composed of 12 key kernels (listed in
 Table~\ref{SLAMBench_Features}). 
-%: \textit{mm2meters, bilateralFilter, integrate, depth2vertex,
-% vertex2normal, halfSampleRobustImage, renderDepth, renderTrack,
-% renderVolume, raycast, track} and \textit{reduce}. 
+
+\begin{itemize}
+\item \textbf{\textit{preprocessing}:} \textit{mm2meters, bilateralFilter};
+\item \textbf{\textit{integration}:} \textit{integrate};
+\item \textbf{\textit{raycasting}:} \textit{raycast};
+\item \textbf{\textit{rendering}:} \textit{renderDepth, renderTrack, renderVolume};
+\item \textbf{\textit{tracking}:} \textit{depth2vertex, vertex2normal,
+      halfSampleRobustImage, track, reduce}.
+\end{itemize}
+
 Ten of the twelve can be classified as being irregular:
 All kernels except \textit{depth2vertex}, \textit{vertex2Normal},
 and \textit{mm2meters} exhibit non static-affine conditions and/or
@@ -132,15 +133,217 @@ loop-bounds, while \textit{raycast}, \textit{renderVolume},
 \textit{bilateralFilter} also exhibit non static-affine array reads.
 
 
-Why is it interesting.
+TODO: Why is it interesting.
 
 
-Show code snapshots.
+TODO: Show code snapshots.
 
+%-------------------------------------------------
+%-------------------------------------------------
 
 \section{Overview of \pencil{}}
 
+\pencil is a subset of the C99 language carefully designed to
+capture static properties essential to the implementation of advanced
+loop nest transformations.  It provides a set of language constructs
+that helps parallelizing compilers to perform more accurate static
+analyses and to generate efficient target-specific code.  These
+specific constructs provide information that is difficult for a
+compiler to extract but that can be easily captured from a DSL, or
+expressed by an expert programmer.
 
+We designed \pencil with four main goals in mind:
+(1) the language should simplify static code analysis,
+to enable a high degree of optimization.
+The main impact of this is that the use of pointers is
+disallowed, except in specific cases,
+(2) \pencil should provide facilities that allow a domain
+expert or a DSL-to-\pencil compiler to convey, in \pencil,
+domain-specific information that can be exploited by the \pencil
+compiler during optimization,
+(3) a standard non-parallelizing C99 compiler that supports
+GNU C attributes should be able to compile \pencil.
+This ensures portability to platforms without OpenCL support and allows
+existing tools to be used for debugging (unparallelized) \pencil code.
+(4) we chose a sequential semantics for \pencil in order to simplify
+DSL compiler development and the work of a domain expert directly
+developing in \pencil, and more importantly, to avoid committing
+to any particular pattern(s) of parallelism.
+  
+We detail the most important restrictions imposed by \pencil from the point of 
+view of enabling GPU-oriented compiler optimizations.  The \pencil
+specification~\cite{pencil} contains the rules in full.
+
+\smallskip\noindent\textbf{Pointer restrictions.}
+  Pointer declarations and definitions are allowed in \pencil{}, but
+  pointer manipulation (including arithmetic) is not, except that  C99
+  array references are allowed as arguments in function calls.
+  Pointer dereferencing is also not
+  allowed except for accessing C99 arrays.  The restricted use of
+  pointers is important for moving data between different address
+  spaces of hardware accelerators, as it essentially eliminates aliasing
+  problems.
+
+\smallskip\noindent\textbf{No recursion.} 
+  Recursive function calls are not allowed, because accelerator programming 
+  languages such as OpenCL forbid this.
+
+\smallskip\noindent\textbf{Sized, non-overlapping arrays.}
+  Arrays must be declared using the C99 variable-length array
+  syntax \cite{c99}; array function arguments must be declared using
+  \lstinline!pencil_attributes!, a macro expanding to the
+  \lstinline!restrict! and the \lstinline!const! C99 type qualifiers
+  and to the \lstinline!static! C99 keyword.  During optimization,
+  the \pencil compiler thus knows the length of arrays, and that arrays
+  do not overlap.
+
+\smallskip\noindent\textbf{Structured \lstinline!for! loops.} A \pencil
+  \lstinline!for! loop must have a single iterator, an
+  invariant start value, an invariant stop value and a
+  constant increment (step).  Invariant in this context means that the
+  value does not change in the loop body. By precisely specifying
+  the loop format we avoid the need for a sophisticated induction
+  variable analysis.  Such an analysis is not only complex to
+  implement, but more importantly results in compiler analyses
+  succeeding or failing under conditions unpredictable to the user.
+
+\smallskip
+An additional programming guideline (which is not mandatory as it cannot be 
+statically checked in general)
+is that array accesses should not be linearized.  Linearization tends to
+obfuscate affine subscript expressions, hindering the effectiveness of
+the \pencil compiler.
+Multidimensional C99 arrays should be used instead.
+
+The main constructs introduced by \pencil include the
+assume builtin function, the
+\lstinline!independent! directive, summary functions and
+the kill builtin function.
+They are described here very briefly, for a complete
+description please refer to~\cite{pencil,pencil_pact,pencil_wolfhpc}.
+
+\subsection{Assume Builtin}
+
+\lstinline!__pencil_assume! is an intrinsic function 
+\lstinline!__pencil_assume(!$e$\lstinline!)!, where $e$ is a logical expression,
+indicates that $e$ is guaranteed to hold whenever the control flow reaches
+the intrinsic.
+This knowledge is taken on trust by the \pencil compiler, and may enable
+generation of more efficient code.
+An assume statement allows a programmer to communicate high level facts
+in the generated code.
+
+A \emph{general 2D convolution} in image processing is a a good
+example that demonstrates the use of \lstinline!__pencil_assume!.
+This image processing kernel calculates the weighted sum of the
+area around each pixel using a kernel matrix for weights.
+It is sufficient, in general to consider that the size of the
+convolution matrix (the matrix that hols the convolution kernel)
+does not exceed $15\times15$.
+This can be expressed using the assume builtin as follows:
+
+\begin{lstlisting}[stepnumber=1,numbers=left,numberstyle={\tiny\tt},numbersep=5pt,escapechar=@,language=pencil]
+__pencil_assume(kernel_matrix_rows <= 15);
+__pencil_assume(kernel_matrix_cols <= 15);
+\end{lstlisting}
+
+\subsection{Independent Directive}
+\label{sec:for-directives}
+
+The \lstinline!independent! directive is used to annotate loops.
+It indicates that the desired result of the loop execution does not
+depend in any way upon the execution order of the data accesses from
+different iterations.  In particular, data accesses from different
+iterations may be executed simultaneously.
+In practice, the \lstinline!independent! directive can be used to
+indicate that the marked loop does not have any loop carried
+dependence (i.e., it could be run in parallel).
+
+\subsection{Summary Functions}
+\label{sec:summaries}
+
+The effect of a function call on its array arguments is derived
+from an analysis of the called function.
+In some cases, the results of this analysis may be too inaccurate.
+In the extreme case, no code may be available for the function and the
+compiler can then only assume that every element of the passed arrays
+is accessed.
+In order to obtain more accurate information on memory accesses, the user
+may tell the compiler to derive the memory accesses not from the actual
+function body, but from some other function with the same signature.
+Such a function is called a \emph{summary function}.
+
+In practice, summary functions are used to describe the memory access
+patterns of (1) library functions called from \pencil code, for which
+source code is not available for analysis, and (2) non-\pencil functions
+called from \pencil code, as they are otherwise difficult to analyze.
+The use of summary functions enables more precise static analysis.
+
+\subsection{\pencil Kill}
+\label{sec:kill}
+
+The \lstinline!__pencil_kill! builtin function
+allows the user to refine dataflow information
+within and across any control flow region in the program.
+It is a polymorphic function that signifies that its argument
+(a variable or an array element) is dead at the program point
+where \lstinline!__pencil_kill! is inserted, meaning that no data
+flows from any statement instance executed before the kill to any
+statement instance executed after.
+
+\subsection{Non-\pencil{} Region Memory Tag}
+
+The \lstinline!__pencil_npr_mem_tag!\footnote{\lstinline!__pencil_npr_mem_tag!
+stands for \emph{Non \pencil Region Memory Tag}.} builtin function has the
+following prototype:
+
+\begin{lstlisting}[language=pencil]
+void __pencil_npr_mem_tag(void *location, enum npr_mem_tags mode);
+\end{lstlisting}
+
+\noindent where \lstinline!mode! can be either \lstinline!r!,
+\lstinline!w!, \lstinline!rw! or \lstinline!n!.
+
+If mode is \lstinline!r!, the intrinsic allows the optimizer to assume that
+the memory pointed by \lstinline!location! is used for read only in all the
+non-\pencil regions that are reachable by the intrinsic (this is
+valid until this intrinsic is called once again).
+The mode \lstinline!w! indicates that the memory pointed by \lstinline!location!
+is used for write only, the mode \lstinline!rw! indicates that it is used for
+read and write, and the mode \lstinline!n! indicates that it is not used at
+all.
+If the assumption is violated during execution, the behavior
+is undefined.
+
+\paragraph{Example}
+
+\begin{lstlisting}[language=pencil]
+__pencil_npr_mem_tag(A, n);
+
+#pragma pencil region
+{
+	  for (int i = 0; i < N; i++)
+		        A[i] = 0;
+}
+
+int *B = (int *) malloc (sizeof(int)*N);
+
+#pragma pencil region
+{
+	  for (int i = 0; i < N; i++)
+		        B[i] = A[i];
+}
+\end{lstlisting}
+
+The use of \lstinline!__pencil_npr_mem_tag! indicates that the array \lstinline!A!
+is not used in the non-\pencil regions of the program that follow the call to
+\lstinline!__pencil_npr_mem_tag!.
+In this case, if the \pencil compiler generates OpenCL code, it will avoid
+copying the array A back from the GPU device memory into the host memory after
+the first \pencil region.
+
+%-------------------------------------------------
+%-------------------------------------------------
 
 \section{Polyhedral Compilation of PENCIL Code}
 
@@ -153,17 +356,8 @@ The benchmark reports results for 5 distinct phases, each of which
 is composed of one or more of the above kernels.
 For each phase, we compare performance against the pre-existing OpenCL
 implementation that has been hand-optimized for the ARM Arndale board
-with the Mali-T604 GPU. The phases and their constituent kernels are
-as follows:
+with the Mali-T604 GPU.
 
-\begin{itemize}
-\item \textbf{\textit{preprocessing}:} \textit{mm2meters, bilateralFilter};
-\item \textbf{\textit{integration}:} \textit{integrate};
-\item \textbf{\textit{raycasting}:} \textit{raycast};
-\item \textbf{\textit{rendering}:} \textit{renderDepth, renderTrack, renderVolume};
-\item \textbf{\textit{tracking}:} \textit{depth2vertex, vertex2normal,
-      halfSampleRobustImage, track, reduce}.
-\end{itemize}
 
 
 Methodology
