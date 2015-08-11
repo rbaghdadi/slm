@@ -13,7 +13,8 @@
 \pagestyle{headings}  % switches on printing of running heads
 \mainmatter           % start of the contributions
 %
-\title{}
+\title{Automatic Parallelization and Optimization of a
+	SLAM Application Written in the PENCIL Language}
 
 %
 \author{}
@@ -28,18 +29,23 @@
   prone, and not performance-portable. Automatic parallelization
   and code optimization techniques have been proposed
   to hide this complexity and regain some performance portability.
-  Studying a computer vision application, we propose
-  \pencil{}, a platform-neutral compute intermediate language that can
-  be used as a high level language to target accelerators.
-  We demonstrate the \pencil{} constructs on examples from different
-  fields, including code patterns considered unfriendly to polyhedral
-  compilers, such as irregular, data-dependent control flow and array
-  accesses.
-  We evaluate the proposed language and tool chain on an implementation
-  of KinectFusion, a large computer vision and \textit{simultaneous
-  localization and mapping} (SLAM) application.
-  We obtain acceptable performance compared to the relatively low
-  programming effort and compared to the high portability benefit.
+  \pencil{} is a higher level, platform-neutral compute intermediate
+  language, designed to improve the ability of compilers to better
+  parallelize and optimize code when targeting accelerators.
+
+  In this paper, we report our experience in using automatic
+  parallelization and optimization techniques of a challenging,
+  real world application written in \pencil{}:
+  the KinectFusion application, a large computer
+  vision and \textit{simultaneous localization and mapping} (SLAM)
+  application.
+  We use a polyhedral compiler to map the \pencil{} code into
+  an OpenCL code.
+  We demonstrate how \pencil{} helps in enhancing the ability of
+  that polyhedral compiler to automatically parallelize and optimize
+  the SLAM application and we show that we obtain acceptable performance
+  compared to the relatively low programming effort and compared to
+  the high portability benefit.
 \end{abstract}
 
 \section{Introduction}
@@ -132,11 +138,11 @@ Why is it interesting.
 Show code snapshots.
 
 
+\section{Overview of \pencil{}}
+
+
+
 \section{Polyhedral Compilation of PENCIL Code}
-
-
-
-
 
 
 
